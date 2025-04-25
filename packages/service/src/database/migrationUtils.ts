@@ -60,54 +60,37 @@ export async function handleMigrations(): Promise<void> {
 }
 
 async function buildMigrations(): Promise<void> {
-    const migrationsDir = path.resolve(global.__dirname,  `database/migrations/*`);
-    const buildMigrationsDir = path.resolve(global.__dirname, "../dist/migrations");
-
-    // Migrations don't need to be built in ESM because TypeORM is stupid and cant handle it
-    const command = `npx tsup ${migrationsDir} --format cjs --dts --out-dir ${buildMigrationsDir}`;
-
-    // Execute command in the directory of service so tsup is available
-    const serviceDir = path.resolve(global.__dirname, "../");
+    const serviceDir = path.resolve(global.__dirname, "../"); // packages/service
     return new Promise((resolve, reject) => {
-        exec(command, { cwd: serviceDir }, (error, _, stderr) => {
-            if (error) {
-                console.error(`Error building migrations: ${error.message}`);
-                reject(error); 
-                return;
+        exec("npm run build:migrations", { cwd: serviceDir }, (err, stdout, stderr) => {
+            if (err) {
+                console.error("Error building migrations:", err.message);
+                return reject(err);
             }
             if (stderr) {
-                console.error(`Error: ${stderr}`);
-                reject(new Error(stderr));
-                return;
+                console.error("Migrations build stderr:", stderr);
+                return reject(new Error(stderr));
             }
-            // console.log(`Migrations has been successfully build.`);
+            console.log("Migrations build");
             resolve();
         });
     });
 }
 
 async function buildDataSource(): Promise<void> {
-    const dataSourcePath = path.resolve(global.__dirname, "database/dataSourceRef.ts");
-    const distDir = path.resolve(global.__dirname, "../dist");
-
-    const command = `npx tsup ${dataSourcePath} --format cjs,esm --dts --out-dir ${distDir}`;
-    
-    // Execute command in the directory of service so tsup is available
-    const serviceDir = path.resolve(global.__dirname, "../");
+    const serviceDir = path.resolve(global.__dirname, "../"); // packages/service
     return new Promise((resolve, reject) => {
-        exec(command, { cwd: serviceDir }, (error, _, stderr) => {
-            if (error) {
-                console.error(`Error compiling datasource: ${error.message}`);
-                reject(error);
-                return;
+        exec("npm run build:datasource", { cwd: serviceDir }, (err, stdout, stderr) => {
+            if (err) {
+                console.error("Error building data source:", err.message);
+                return reject(err);
             }
             if (stderr) {
-                console.error(`Error: ${stderr}`);
-                reject(new Error(stderr));
-                return;
+                console.error("Data source build stderr:", stderr);
+                return reject(new Error(stderr));
             }
-            // console.log(`Datasource has been successfully built.`);
-            resolve(); 
+            console.log("Data source build");
+            resolve();
         });
     });
 }
