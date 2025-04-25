@@ -19,24 +19,14 @@ Install the service package:
 npm install @aio-chat/service
 ```
 
-You will also need `reflect-metadata` for TypeORM:
-
-```bash
-npm install reflect-metadata
-```
-
 ---
 
 ## Quick Start
 
 ### Setup
 
-1.  Import `reflect-metadata` at the top of your entry file:
-    ```javascript
-    import 'reflect-metadata';
-    ```
-2.  Create a file to start the service (e.g., `server.js`).
-3.  Import and start the service:
+1.  Create a file to start the service (e.g., `server.js`).
+2.  Import and start the service:
     ```javascript
     import { startService } from '@aio-chat/service';
 
@@ -45,7 +35,7 @@ npm install reflect-metadata
       .catch((err) => console.error("Failed to start chat service:", err));
     ```
 
-4.  Add a start command to your `package.json`:
+3.  Add a start command to your `package.json`:
     ```json
     "scripts": {
       "start:service": "node path/to/server.js"
