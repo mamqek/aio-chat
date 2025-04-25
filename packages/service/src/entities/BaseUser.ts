@@ -50,27 +50,6 @@ export abstract class BaseUser {
     // Add the toJSON method to include getters in the JSON output
     // So full_name, avatar, and bio are present on the frontend
     toJSON() {
-  // ——— 1) Log all TypeORM columns for this class ———
-  getMetadataArgsStorage()
-    .columns
-    .filter(c => c.target === this.constructor)
-    .forEach(c => {
-      console.log(`[toJSON] @Column() → property='${c.propertyName}', mappedName='${c.options?.name ?? c.propertyName}'`);
-    });
-
-  // ——— 2) Log every own property/value on the instance ———
-  Object.getOwnPropertyNames(this).forEach(key => {
-    console.log(`[toJSON] this.${key} =`, (this as any)[key]);
-  });
-
-  // ——— 3) Log what each getter is about to return ———
-  console.log(`[toJSON] getter full_name →`, this.full_name);
-  console.log(`[toJSON] getter avatar    →`, this.avatar);
-  console.log(`[toJSON] getter bio       →`, this.bio);
-
-        console.log("toJSON called on BaseUser");
-        console.log("this:", this);
-        console.log("this.full:", this.full_name);
         return {
             ...this,
             full_name: this.full_name,
