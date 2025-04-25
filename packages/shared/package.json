@@ -1,6 +1,6 @@
 {
   "name": "@aio-chat/shared",
-  "version": "1.0.1-2",
+  "version": "1.0.1-3",
   "description": "Helper package for @aio-chat system. This package contains data shared between client and service.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
