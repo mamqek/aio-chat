@@ -1,6 +1,6 @@
 {
   "name": "@aio-chat/shared",
-  "version": "1.0.1-1",
+  "version": "1.0.1-2",
   "description": "Helper package for @aio-chat system. This package contains data shared between client and service.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -9,6 +9,10 @@
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     }
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "build": "tsup src/index.js --format cjs,esm"
