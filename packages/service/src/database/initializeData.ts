@@ -3,24 +3,34 @@ import { Chat } from '../entities/Chat.js';
 import { getConfigVariable } from '../config/config.server.js';
 import { BaseUser } from '../entities/BaseUser.js';
 import { UserFieldMapping } from '../types/UserConfig.js';
+import { FindOptionsWhere } from 'typeorm';
 
 export async function initializeData() {
     let User = getConfigVariable("user_entity");
     const userRepository = AppDataSource.getRepository(User);
     const userCount = await userRepository.count();
 
-    if (userCount === 0) {
-        const user1 = createCustomUser({
-            full_name: 'Alice',
-            avatar: 'alice.png',
-            bio: 'Hi, I am Alice',
-        });
-        const user2 = createCustomUser({
-            full_name: 'Bob',
-            avatar: 'bob.png',
-            bio: 'Hello, I am Bob',
-        });
-        
+    const user1 = createCustomUser({
+        full_name: 'Alice',
+        avatar: 'alice.png',
+        bio: 'Hi, I am Alice',
+    });
+    const user2 = createCustomUser({
+        full_name: 'Bob',
+        avatar: 'bob.png',
+        bio: 'Hello, I am Bob',
+    });
+
+    const mapping: UserFieldMapping = getConfigVariable("user_mapping");
+    const aliceQuery: FindOptionsWhere<BaseUser> = { 
+        [mapping.full_name!.name]: user1.full_name,
+        [mapping.avatar!.name]: user1.avatar,
+        [mapping.bio!.name]: user1.bio,
+    };
+
+    const existingAlice = await userRepository.findOneBy(aliceQuery);
+    if (!existingAlice) {
+
         await userRepository.save([user1, user2]);
 
         const chatRepository = AppDataSource.getRepository(Chat);
