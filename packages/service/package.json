@@ -57,6 +57,9 @@
     "type": "git",
     "url": "https://github.com/mamqek/aio-chat"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "private": false,
   "keywords": [
     "chat",

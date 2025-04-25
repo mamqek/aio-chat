@@ -23,6 +23,9 @@
     "LICENSE",
     "package.json"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "private": false,
   "author": "Mamqek",
   "license": "MIT"
