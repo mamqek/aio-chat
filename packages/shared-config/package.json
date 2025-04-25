@@ -1,0 +1,15 @@
+{
+  "name": "@aio-chat/shared-config",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.js --format cjs,esm"
+  }
+}

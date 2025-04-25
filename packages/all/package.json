@@ -1,0 +1,18 @@
+{
+    "name": "@aio-chat/all",
+    "version": "1.0.0",
+    "description": "Meta-package to install both the AIO Chat web component and service.",
+    "private": false,
+    "dependencies": {
+        "@aio-chat/client": "^1.0.0",
+        "@aio-chat/service": "^1.0.0"
+    },
+    "keywords": [
+        "chat",
+        "web-component",
+        "service",
+        "aio-chat"
+    ],
+    "author": "Your Name",
+    "license": "MIT"
+}

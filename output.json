@@ -1,0 +1,306 @@
+{
+  "graph": {
+    "nodes": {
+      "shared-config": {
+        "name": "shared-config",
+        "type": "lib",
+        "data": {
+          "root": "packages/shared-config",
+          "name": "shared-config",
+          "tags": [
+            "npm:public"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "js": {
+              "packageName": "@aio-chat/shared-config",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/index.js",
+                  "import": "./dist/index.mjs"
+                }
+              },
+              "packageMain": "./dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/shared-config && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/shared-config/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "service": {
+        "name": "service",
+        "type": "lib",
+        "data": {
+          "root": "packages/service",
+          "name": "service",
+          "tags": [
+            "npm:public"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev",
+                "test"
+              ]
+            },
+            "js": {
+              "packageName": "@aio-chat/service",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/exports.cjs",
+                  "import": "./dist/exports.js"
+                }
+              },
+              "packageMain": "./dist/index.cjs",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "node --loader ts-node/esm src/index.ts",
+                "runCommand": "npm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "npm run test"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/service && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "serve": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/service/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "client": {
+        "name": "client",
+        "type": "lib",
+        "data": {
+          "root": "packages/client",
+          "name": "client",
+          "tags": [
+            "npm:public"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev",
+                "test"
+              ]
+            },
+            "js": {
+              "packageName": "@aio-chat/client",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/chat-widget.umd.js",
+                  "import": "./dist/chat-widget.mjs"
+                }
+              },
+              "packageMain": "./dist/chat-widget.umd.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "vite",
+                "runCommand": "npm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "npm run test"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/client && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "serve": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/client/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "@aio-chat/all": {
+        "name": "@aio-chat/all",
+        "type": "lib",
+        "data": {
+          "root": "packages/all",
+          "name": "@aio-chat/all",
+          "tags": [
+            "npm:public",
+            "npm:chat",
+            "npm:web-component",
+            "npm:service",
+            "npm:aio-chat"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "description": "Meta-package to install both the AIO Chat web component and service.",
+            "js": {
+              "packageName": "@aio-chat/all",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "shared-config": [],
+      "service": [
+        {
+          "source": "service",
+          "target": "shared-config",
+          "type": "static"
+        }
+      ],
+      "client": [
+        {
+          "source": "client",
+          "target": "shared-config",
+          "type": "static"
+        }
+      ],
+      "@aio-chat/all": [
+        {
+          "source": "@aio-chat/all",
+          "target": "client",
+          "type": "static"
+        },
+        {
+          "source": "@aio-chat/all",
+          "target": "service",
+          "type": "static"
+        }
+      ]
+    }
+  }
+}
