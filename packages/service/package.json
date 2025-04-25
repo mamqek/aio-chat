@@ -1,6 +1,6 @@
 {
   "name": "@aio-chat/service",
-  "version": "1.0.1-4",
+  "version": "1.0.1-5",
   "type": "module",
   "description": "All in one chat includes a web component and a backend service for real-time chat. This is the server package of @aio-chat",
   "main": "./dist/exports.cjs",
@@ -23,7 +23,7 @@
     "pg": "^8.7.0"
   },
   "dependencies": {
-    "@aio-chat/shared": "^1.0.1-4",
+    "@aio-chat/shared": "^1.0.1-5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.18.2",
@@ -34,7 +34,8 @@
     "sqlite3": "^5.1.7",
     "tsup": "^8.4.0",
     "typeorm": "^0.3.12",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "@types/node": "^18.11.9"
   },
   "devDependencies": {
     "@swc/core": "^1.11.21",
@@ -43,7 +44,6 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-    "@types/node": "^18.11.9",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.1",
     "ts-node": "^10.9.1"
