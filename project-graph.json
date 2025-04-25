@@ -1,0 +1,332 @@
+{
+  "graph": {
+    "nodes": {
+      "service": {
+        "name": "service",
+        "type": "lib",
+        "data": {
+          "root": "packages/service",
+          "name": "service",
+          "tags": [
+            "npm:public",
+            "npm:chat",
+            "npm:real-time",
+            "npm:aio-chat",
+            "npm:all-in-one-chat",
+            "npm:communication",
+            "npm:chat-service",
+            "npm:socket",
+            "npm:database"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev",
+                "test"
+              ]
+            },
+            "description": "All in one chat includes a web component and a backend service for real-time chat. This is the server package of @aio-chat",
+            "js": {
+              "packageName": "@aio-chat/service",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/exports.cjs",
+                  "import": "./dist/exports.js"
+                }
+              },
+              "packageMain": "./dist/exports.cjs",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "node --loader ts-node/esm src/index.ts",
+                "runCommand": "npm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "npm run test"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/service && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "serve": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/service/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "client": {
+        "name": "client",
+        "type": "lib",
+        "data": {
+          "root": "packages/client",
+          "name": "client",
+          "tags": [
+            "npm:public",
+            "npm:chat",
+            "npm:web-component",
+            "npm:vue",
+            "npm:real-time",
+            "npm:chat-widget",
+            "npm:aio-chat",
+            "npm:all-in-one-chat",
+            "npm:aio-chat-widget",
+            "npm:communication"
+          ],
+          "metadata": {
+            "targetGroups": {
+              "NPM Scripts": [
+                "dev",
+                "test"
+              ]
+            },
+            "description": "All in one chat includes a web component and a backend service for real-time chat. This is the client package of @aio-chat",
+            "js": {
+              "packageName": "@aio-chat/client",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/chat-widget.umd.cjs",
+                  "import": "./dist/chat-widget.js"
+                }
+              },
+              "packageMain": "./dist/chat-widget.umd.cjs",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "dev": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "metadata": {
+                "scriptContent": "vite",
+                "runCommand": "npm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "test"
+              },
+              "metadata": {
+                "scriptContent": "jest",
+                "runCommand": "npm run test"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/client && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "serve": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/client/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "shared": {
+        "name": "shared",
+        "type": "lib",
+        "data": {
+          "root": "packages/shared",
+          "name": "shared",
+          "tags": [
+            "npm:public"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "description": "Helper package for @aio-chat system. This package contains data shared between client and service.",
+            "js": {
+              "packageName": "@aio-chat/shared",
+              "packageExports": {
+                ".": {
+                  "require": "./dist/index.js",
+                  "import": "./dist/index.mjs"
+                }
+              },
+              "packageMain": "./dist/index.js",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "cd packages/shared && npm run build"
+              },
+              "outputs": [
+                "{projectRoot}/dist"
+              ],
+              "configurations": {},
+              "parallelism": true,
+              "dependsOn": [
+                "^build"
+              ]
+            }
+          },
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/shared/src",
+          "projectType": "library",
+          "implicitDependencies": []
+        }
+      },
+      "@aio-chat/all": {
+        "name": "@aio-chat/all",
+        "type": "lib",
+        "data": {
+          "root": "packages/all",
+          "name": "@aio-chat/all",
+          "tags": [
+            "npm:public",
+            "npm:chat",
+            "npm:web-component",
+            "npm:vue",
+            "npm:real-time",
+            "npm:chat-widget",
+            "npm:aio-chat",
+            "npm:all-in-one-chat",
+            "npm:aio-chat-widget",
+            "npm:communication",
+            "npm:chat-service"
+          ],
+          "metadata": {
+            "targetGroups": {},
+            "description": "All in one chat includes a web component and a backend service for real-time chat. This package contains both the client and server packages.",
+            "js": {
+              "packageName": "@aio-chat/all",
+              "isInPackageManagerWorkspaces": true
+            }
+          },
+          "targets": {
+            "nx-release-publish": {
+              "executor": "@nx/js:release-publish",
+              "dependsOn": [
+                "^nx-release-publish"
+              ],
+              "options": {},
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "service": [
+        {
+          "source": "service",
+          "target": "shared",
+          "type": "static"
+        }
+      ],
+      "client": [
+        {
+          "source": "client",
+          "target": "shared",
+          "type": "static"
+        }
+      ],
+      "shared": [],
+      "@aio-chat/all": [
+        {
+          "source": "@aio-chat/all",
+          "target": "client",
+          "type": "static"
+        },
+        {
+          "source": "@aio-chat/all",
+          "target": "service",
+          "type": "static"
+        }
+      ]
+    }
+  }
+}
