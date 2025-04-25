@@ -1,18 +1,29 @@
 {
-    "name": "@aio-chat/all",
-    "version": "1.0.0",
-    "description": "Meta-package to install both the AIO Chat web component and service.",
-    "private": false,
-    "dependencies": {
-        "@aio-chat/client": "^1.0.0",
-        "@aio-chat/service": "^1.0.0"
-    },
-    "keywords": [
-        "chat",
-        "web-component",
-        "service",
-        "aio-chat"
-    ],
-    "author": "Your Name",
-    "license": "MIT"
+  "name": "@aio-chat/all",
+  "version": "1.0.0",
+  "description": "All in one chat includes a web component and a backend service for real-time chat. This package contains both the client and server packages.",
+  "type": "module",
+  "dependencies": {
+    "@aio-chat/client": "^1.0.0",
+    "@aio-chat/service": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mamqek/aio-chat"
+  },
+  "private": false,
+  "keywords": [
+    "chat",
+    "web-component",
+    "vue",
+    "real-time",
+    "chat-widget",
+    "aio-chat",
+    "all-in-one-chat",
+    "aio-chat-widget",
+    "communication",
+    "chat-service"
+  ],
+  "author": "Mamqek",
+  "license": "MIT"
 }

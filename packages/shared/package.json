@@ -1,0 +1,29 @@
+{
+  "name": "@aio-chat/shared",
+  "version": "1.0.0",
+  "description": "Helper package for @aio-chat system. This package contains data shared between client and service.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.js --format cjs,esm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mamqek/aio-chat"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "private": false,
+  "author": "Mamqek",
+  "license": "MIT"
+}
