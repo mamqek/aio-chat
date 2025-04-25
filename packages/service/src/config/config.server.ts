@@ -1,4 +1,4 @@
-import { setCommonConfig } from '@aio-chat/shared-config';
+import { setCommonConfig } from '@aio-chat/shared';
 import { DefaultUser } from '../entities/DefaultUser.js';
 import { LoggerOptions } from 'typeorm';
 import { generateCustomUserClass } from './user.config.js';

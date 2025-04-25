@@ -10,7 +10,7 @@
         "build": "nx run-many --target=build --all",
         "build:client": "nx build client",
         "build:service": "nx build service",
-        "build:config": "nx build shared-config",
+        "build:config": "nx build shared",
         "dev:client": "nx run client:serve",
         "dev:service": "nx run service:serve",
         "dev": "nx run-many --target=serve --parallel=true --projects=client,service"

@@ -13,7 +13,7 @@ jest.mock('../src/auth/context', () => ({
 }));
 jest.mock('../src/config/config.server');
 
-jest.mock('@aio-chat/shared-config', () => ({
+jest.mock('@aio-chat/shared', () => ({
   setCommonConfig: jest.fn(),
   getCommonConfig: jest.fn(() => ({
     SERVICE_URL: 'http://localhost:4000',

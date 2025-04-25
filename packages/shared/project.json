@@ -1,13 +1,13 @@
 {
-  "name": "shared-config",
+  "name": "shared",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/shared-config/src",
+  "sourceRoot": "packages/shared/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "cd packages/shared-config && npm run build"
+        "command": "cd packages/shared && npm run build"
       },
       "outputs": ["{projectRoot}/dist"]
     }
