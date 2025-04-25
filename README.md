@@ -1,108 +1,176 @@
-# VueChatNx
+# @aio-chat 
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+@aio-chat or in other words All in one chat is a highly configurable chat solution that includes a @aio-chat/client for embedding chat functionality into your frontend and a @aio-chat/service for managing chat logic, authentication, and database interactions.You can download both via @aio-chat/all
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/npm-workspaces-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- **@aio-chat/client**: Easily embed a web component into your application.
+- **@aio-chat/service**: Manage chat logic, authentication, and database interactions.
+- **Authentication**: Supports multiple authentication methods, including JWT, Proxy, and Custom.
+- **Database Support**: Works with SQLite, MySQL, and PostgreSQL.
+- **Customizability**: Override default behavior for both the @aio-chat/client and @aio-chat/service.
 
-## Run tasks
+---
 
-To run tasks with Nx use:
+## Documentation
 
-```sh
-npx nx <target> <project-name>
+The documentation is divided into two main sections:
+
+1. **[Client](./docs/web-component/index.md)**: Learn how to set up and configure the web component provided by @aio-chat/client.
+2. **[Service](./docs/service/index.md)**: Understand the @aio-chat/service, its configuration, and customization options.
+
+---
+
+## Quick Start
+
+### Installation
+
+Install the necessary packages:
+
+```bash
+npm install @aio-chat/all
+```
+This will download both the `@aio-chat/client` and `@aio-chat/service` packages, providing everything you need to get started with the chat solution.
+
+Also, ensure Vue.js is installed in your project:
+
+```bash
+npm install vue
 ```
 
-For example:
+## Client
 
-```sh
-npx nx build myproject
-```
+The @aio-chat/client allows you to embed a web component into your application. It supports two ways to initialize:
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+1. **Using the `<chat-widget>` HTML Element**:
+   ```html
+   <chat-widget user_id="123" service_url="https://your-backend.com"></chat-widget>
+   ```
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+2. **Using the `initChatWidget` Function**:
+   ```javascript
+   import { initChatWidget } from '@aio-chat/client';
 
-## Versioning and releasing
+   initChatWidget({
+     user_id: 123,
+     service_url: 'https://your-backend.com',
+     container: document.querySelector('#chat-container')
+   });
+   ```
 
-To version and release the library use
+For more details, refer to the [Client Documentation](./docs/web-component/index.md).
 
-```
-npx nx release
-```
+---
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+## Service
 
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+The @aio-chat/service provides the backend functionality required for chat, including database management, authentication, and chat logic.
 
-## Add new projects
+### Key Features
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+- **Authentication**: Supports Direct, Auth Endpoint, JWT, Proxy, and Custom authentication methods.
+- **Database**: Works with SQLite, MySQL, and PostgreSQL. Includes migration utilities.
+- **Customizability**: Override default chat logic and user filtering.
 
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
+### Setup
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+1. Create a file to start the service (e.g., `chat_service.js`).
+2. Import and start the service:
+   ```javascript
+   import { startService } from '@aio-chat/service';
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+   startService(config)
+     .then(() => console.log("Chat service started successfully."))
+     .catch((err) => console.error("Failed to start chat service:", err));
+   ```
+    For the start you can avoid providing config, but later see all options [here](./docs/service/config.md)
+3. Add a start command to your `package.json`:
+   ```json
+   "scripts": {
+     "start:service": "node path/to/chat_service.js"
+   }
+   ```
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
+For more details, refer to the [Service Documentation](./docs/service/index.md).
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+---
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Configuration
 
-## Set up CI!
+Both the @aio-chat/client and @aio-chat/service are highly configurable. Key configuration options include:
 
-### Step 1
+- **@aio-chat/client**:
+  - `service_url`: The base URL where you host @aio-chat/service.
+  - `user_id`: The ID of the authenticated user.
+  - `token`: The JWT token used for authentication, check [Service authentication docs](./docs/service/authentication.md#authentication-methods).
 
-To connect to Nx Cloud, run the following command:
+For a full list of options, refer to the [Client Configuration Documentation](./docs/web-component/config.md).
 
-```sh
-npx nx connect
-```
+- **@aio-chat/service**:
+  - `DB_TYPE`: Type of database (`sqlite`, `mysql`, or `postgres`).
+  - `AUTH_MODE`: Authentication mode (`direct`, `auth-endpoint`, `jwt`, `proxy`, or `custom`).
+  - `user_mapping`: Map user fields to your database schema.
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+For a full list of options, refer to the [Service Configuration Documentation](./docs/service/config.md).
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-### Step 2
+## Authentication
 
-Use the following command to configure a CI workflow for your workspace:
+@aio-chat/service supports multiple authentication methods:
 
-```sh
-npx nx g ci-workflow
-```
+1. **Direct**: Quick prototyping with minimal setup.
+2. **Auth Endpoint**: Verifies users through a backend endpoint.
+3. **JWT**: Uses existing JWT authentication systems.
+4. **Proxy**: Routes all chat requests through an authenticated backend.
+5. **Custom**: Implements custom authentication logic.
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+For detailed instructions, refer to the [Authentication Documentation](./docs/service/authentication.md).
 
-## Install Nx Console
+---
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+## Database
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+@aio-chat/service supports SQLite, MySQL, and PostgreSQL. It includes migration utilities to set up and manage the database schema.
 
-## Useful links
+- **SQLite**: Ideal for quick setups or local development.
+- **MySQL/PostgreSQL**: Recommended for production environments.
 
-Learn more:
+For more details, refer to the [Database Documentation](./docs/service/database.md).
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/npm-workspaces-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Customization
+
+@aio-chat is designed to be highly customizable:
+
+- **@aio-chat/client**: Customize the widget's behavior. In the future change modes and appearance. 
+- **@aio-chat/service**: Override default chat logic, user filtering, authentication and connect it to your existing database. 
+
+For advanced use cases, refer to the [Chat Service Documentation](./docs/service/chat-service.md).
+
+---
+
+## Best Practices
+
+1. **Change Default Authentication Method**: Avoid using the default authentication method (`direct`) in production. Choose an authentication method that best fits your application's needs, such as `jwt`, `proxy`, or `custom`.
+2. **Update Authentication Defaults**: Replace default authentication values like `TOKEN_SECRET` and `PROXY_SECRET` with secure, unique values to enhance security.
+3. **Migrations**: Before running migrations on existing database make sure to check documentation on [User Entity customization](./docs/service/database.md#user-entity-customization)
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+- **Authentication Errors**: Ensure secrets and token names match between your app and the @aio-chat/service.
+- **CORS Issues**: Configure CORS on both your proxy endpoint and the @aio-chat/service.
+- **Database Errors**: Verify your database configuration and run migrations.
+
+For more help, check the [GitHub repository](https://github.com/mamqek/aio-chat) or create a new issue.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
