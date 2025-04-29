@@ -63,7 +63,6 @@ export function generateCustomUserClass(
 
         constructor() {
             super();
-
             // Dynamically initialize custom columns based on the mapping
             for (const [propName, columnOptions] of Object.entries(fieldMapping) as [keyof UserFieldMapping, ColumnOptions][]) {
                 if (!(columnOptions.name in this)) {
@@ -78,8 +77,6 @@ export function generateCustomUserClass(
                 }            
             }
         }
-
-
     }
 
     // Dynamically define columns and getters/setters
@@ -90,18 +87,20 @@ export function generateCustomUserClass(
             nullable: columnOptions?.isNullable, 
             default: columnOptions?.default 
         })(CustomUser.prototype, columnOptions.name);
-
-        // Define the getter and setter for the abstract property
-        Object.defineProperty(CustomUser.prototype, columnName, {
-            get() {
-                return this[columnOptions.name];
-            },
-            set(value: any) {
-                this[columnOptions.name] = value;
-            },
-            enumerable: true,
-            configurable: true,
-        });
+        
+        // Define the getter and setter ONLY for the abstract property, which overrides default column
+        if (columnOptions.name !== columnName) {
+            Object.defineProperty(CustomUser.prototype, columnName, {
+                get() {
+                    return this[columnOptions.name];
+                },
+                set(value: any) {
+                    this[columnOptions.name] = value;
+                },
+                enumerable: true,
+                configurable: true,
+            });
+        }
     }
     return CustomUser as new () => BaseUser;
 }
