@@ -11,7 +11,7 @@ You can override the default chat service behavior by providing custom logic.
 In the widget there is a button to create new chats, you can change its retrieval logic of users to create chat with like:
 
 ```javascript
-const myConfig = {
+const config = {
     user_filter : {"customProperty": "value"}
 }
 ```

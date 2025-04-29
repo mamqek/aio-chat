@@ -6,6 +6,7 @@ The @aio-chat/service uses a database to store chat-related data. Overall servic
 2. **Read the chapter about [User Entity Customization](#user-entity-customization) before running migrations on an existing database.**
 3. Run migrations.
 4. Try to start up the service. If errors appear or the database is incorrect, you can always revert migrations.
+5. (optional) Use initializeData() to create sample users and chat for fast setup 
 
 ## Database Types
 
@@ -15,8 +16,8 @@ If you don't have a database in your project yet or don't want to connect chat t
 The only configuration available for it is to specify the path where you want the database file to be created, together with the name of the file at the end of the path.
 
 ```javascript
-const myConfig = {
-    DB_PATH: "relative/path/from/package.json with start command /databaseName.sqlite",
+const config = {
+    DB_PATH: "relative/path/from/package.json with start command/databaseName.sqlite",
 }
 ```
 If not provided, it will be created inside the package directory.
@@ -27,7 +28,7 @@ The package also supports connection to MySQL and PostgreSQL.
 For them, configuration is more extensive as the package needs to connect to the database.
 
 ```javascript
-const myConfig = {
+const config = {
     DB_TYPE: "mysql",
     DB_HOST: "127.0.0.1",
     DB_PORT: 3306,
@@ -40,7 +41,7 @@ const myConfig = {
 If you are accessing the database via URL, then use:
 
 ```javascript
-const myConfig = {
+const config = {
     DB_TYPE: "mysql",
     DB_URL: "mysql://username:password@host:port/database",
 }
@@ -62,7 +63,7 @@ The configuration variable `user_mapping` has 3 keys for each required field. Th
 Also, to avoid errors when adding new columns to a table with some data, the `default` or `isNullable` parameter might be required to resolve the empty state of the column in existing records.
 
 ```javascript
-const myConfig = {
+const config = {
     user_mapping: {
         full_name: { 
             name: 'username', 
@@ -81,7 +82,7 @@ const myConfig = {
 If you would rather have a separate table for chat users, you can change the table name via config:
 
 ```javascript
-const myConfig = {
+const config = {
     user_table_name : "new_table_name"
 }
 ```
@@ -131,6 +132,91 @@ startService(config)
 ```
 
 This way, we ensure that migrations will inherit the config passed to the service.
+
+## Create sample data
+
+Using initializeData() you can create 2 users and a chat between them to test the chat faster. 
+
+```javascript    
+startService(config)
+.then(() => {
+    initializeData()
+})
+.catch((err) => console.error("Failed to start chat service:", err));
+```
+
+You can also pass object with data for both 2 users: 
+```javascript
+startService(config)
+.then(() => {
+    initializeData(
+        [
+            {
+                username: "user1",
+                random_id: "rand1",
+            },
+            {
+                random_id: "rand2",
+            }
+        ]
+    );
+})
+.catch((err) => console.error("Failed to start chat service:", err));
+```
+
+
+If you encounter errors check section below 
+
+### On existing database 
+
+If you want to use initializeData() in existing database, which already has some user records and extra columns you might encounter errors using this function. 
+
+#### NOT NULL constraint
+To solve it you need to provide your additional user columns to user_mapping in [config](./config.md#user-entity) and provide default value for this column 
+
+```javascript
+const config = {
+    user_mapping : {
+        role: {
+            name: "role",
+            default: "user",
+        }
+    }
+}
+```
+
+Technical reason is that when TypeOrm tries to insert new records to the table it doesn't get provided with value to set for this column. 
+
+#### UNIQUE constraint
+
+To solve this error you need to provide your additional user columns to user_mapping just like in NOT NULL constraint above, except default value isn't necessary. 
+Then you need to provide the value for the column for both to be created users via parameter to initializeData().
+
+```javascript
+const config = {
+    user_mapping : {
+        random_id: {
+            name: "random_id",
+        }
+    }
+}
+
+startService(config)
+.then(() => {
+    initializeData(
+        [
+            {
+                username: "user1",
+                random_id: "rand1",
+            },
+            {
+                random_id: "rand2",
+            }
+        ]
+    );
+})
+.catch((err) => console.error("Failed to start chat service:", err));
+```
 
 ## Configuration
 

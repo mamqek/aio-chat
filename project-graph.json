@@ -22,6 +22,8 @@
             "targetGroups": {
               "NPM Scripts": [
                 "dev",
+                "build:datasource",
+                "build:migrations",
                 "test"
               ]
             },
@@ -47,6 +49,30 @@
               "metadata": {
                 "scriptContent": "node --loader ts-node/esm src/index.ts",
                 "runCommand": "npm run dev"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:datasource": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:datasource"
+              },
+              "metadata": {
+                "scriptContent": "tsup src/database/dataSourceRef.ts --format cjs,esm --dts --out-dir dist",
+                "runCommand": "npm run build:datasource"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build:migrations": {
+              "executor": "nx:run-script",
+              "options": {
+                "script": "build:migrations"
+              },
+              "metadata": {
+                "scriptContent": "tsup src/database/migrations/* --format cjs --dts --out-dir dist/migrations",
+                "runCommand": "npm run build:migrations"
               },
               "configurations": {},
               "parallelism": true
