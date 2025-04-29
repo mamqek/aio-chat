@@ -182,28 +182,31 @@ function mergeConfig(newConfig: Partial<MyEnvConfig>) {
 
 function mergeFieldMapping(customMapping: UserFieldMapping): void {
     const defaultMapping = defaultConfig.user_mapping;
-    const mergedMapping: Partial<UserFieldMapping> = {};
+    
+    // Start with the default mapping, then overwrite with custom values
+    // for any matching keys. This ensures all default keys are present
+    // unless explicitly overridden by the custom mapping.
+    const mergedMapping: UserFieldMapping = {
+        ...defaultMapping,
+        ...customMapping,
+    };
 
-    // For each key in the default mapping, use the custom mapping if provided,
-    // otherwise fallback to the default mapping.
-    (Object.keys(defaultMapping) as (keyof UserFieldMapping)[]).forEach(key => {
-        mergedMapping[key] = customMapping && customMapping[key] ? customMapping[key] : defaultMapping[key];
-    });
     currentConfig.user_mapping = mergedMapping;
 }
 
 
 function validateConfig(config: Partial<MyEnvConfig>): void {
+    // TODO: fix this for additiona overrides of attributes and fix type of user config 
     // Check if keys in field_mapping are valid
-    if (config.user_mapping) {
-        const mapping = config.user_mapping;
-        const allowedKeys: (keyof UserFieldMapping)[] = ["full_name", "avatar", "bio"];
-        Object.keys(mapping).forEach(key => {
-            if (!allowedKeys.includes(key as keyof UserFieldMapping)) {
-                throw new Error(`Invalid key "${key}" found in field mapping. Allowed keys are: ${allowedKeys.join(", ")}`);
-            }
-        });
-    }
+    // if (config.user_mapping) {
+    //     const mapping = config.user_mapping;
+    //     const allowedKeys: (keyof UserFieldMapping)[] = ["full_name", "avatar", "bio"];
+    //     Object.keys(mapping).forEach(key => {
+    //         if (!allowedKeys.includes(key as keyof UserFieldMapping)) {
+    //             throw new Error(`Invalid key "${key}" found in field mapping. Allowed keys are: ${allowedKeys.join(", ")}`);
+    //         }
+    //     });
+    // }
 
   // Example: For properties propX and propY, require exactly one to be provided.
 //   const hasPropX = !!config.propX;
