@@ -95,7 +95,7 @@ const defaultConfig: MyEnvConfig = {
         },
         avatar: {
             name: "avatar",
-            default: "'https://example.com/default-avatar.png'",
+            default: "https://example.com/default-avatar.png",
         },
         bio: {
             name: "bio",

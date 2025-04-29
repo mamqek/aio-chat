@@ -61,8 +61,6 @@ The configuration variable `user_mapping` has 3 keys for each required field. Th
 
 Also, to avoid errors when adding new columns to a table with some data, the `default` or `isNullable` parameter might be required to resolve the empty state of the column in existing records.
 
-> ⚠️ **Note**: If SQLite is used, you must provide a default value with specific syntax. First, wrap it with `''` and then wrap it with `""` as well, resulting in `"'name'"`. For MySQL or PostgreSQL, this isn't required.
-
 ```javascript
 const myConfig = {
     user_mapping: {

@@ -176,9 +176,21 @@ export class UserMigration1680300000005 implements MigrationInterface {
         }
 
         const mapping: UserFieldMapping = getConfigVariable("user_mapping");
-        const columns: TableColumnOptions[] = Object.values(mapping).map(column =>
-            ({ ...column, type: "text" })
-        );
+        const columns: TableColumnOptions[] = Object.values(mapping).map(column => {
+            const base: TableColumnOptions = {
+                ...column,
+                type: "text",
+            };
+
+            // SQLite requires default values to be strings, so we need to wrap them in quotes.
+            if (column.default && getConfigVariable("DB_TYPE") == "sqlite") {
+                base.default = `'${column.default}'`;
+            }
+
+            return base;
+        });
+
+
 
         columns.push(
             {
