@@ -3,100 +3,85 @@ import { Chat } from '../entities/Chat.js';
 import { getConfigVariable } from '../config/config.server.js';
 import { BaseUser } from '../entities/BaseUser.js';
 import { UserFieldMapping } from '../types/UserConfig.js';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
-export async function initializeData() {
+// TODO: add explanation for additionalProperties and behaviour of this function to docs
+export async function initializeData(additionalProperties: Record<string, any>[] = []): Promise<void> {
     let User = getConfigVariable("user_entity");
     const userRepository = AppDataSource.getRepository(User);
-    const userCount = await userRepository.count();
 
     const user1 = createCustomUser({
         full_name: 'Alice',
         avatar: 'alice.png',
         bio: 'Hi, I am Alice',
-    });
+    }, additionalProperties[0] ?? {});
+
     const user2 = createCustomUser({
         full_name: 'Bob',
         avatar: 'bob.png',
         bio: 'Hello, I am Bob',
-    });
+    }, additionalProperties[1] ?? {});
 
-    const mapping: UserFieldMapping = getConfigVariable("user_mapping");
-    const aliceQuery: FindOptionsWhere<BaseUser> = { 
-        [mapping.full_name!.name]: user1.full_name,
-        [mapping.avatar!.name]: user1.avatar,
-        [mapping.bio!.name]: user1.bio,
-    };
 
-    const existingAlice = await userRepository.findOneBy(aliceQuery);
-    if (!existingAlice) {
-
-        await userRepository.save([user1, user2]);
-
-        const chatRepository = AppDataSource.getRepository(Chat);
-
-        const chat = chatRepository.create({
-            user1,
-            user2,
-            created_at: new Date(),
-            updated_at: new Date(),
-            user1_unread_count: 0,
-            user2_unread_count: 0
-        });
-        await chatRepository.save(chat);
-
-        console.log('Sample users created:', user1, user2);
-    } else {
-        console.log('Users already exist, skipping user creation.');
+    if (await userExists(user1, userRepository) || await userExists(user2, userRepository)) {
+        return;
     }
+
+    try {
+        await userRepository.save([user1, user2]);
+    } catch (error) {
+        console.error("Error creating users", (error as any).driverError ?? error);
+        console.error("Please check if you provided all required values to initializeData() and user_mapping.");
+        process.exit(1);
+    }
+
+    const chatRepository = AppDataSource.getRepository(Chat);
+    const chat = chatRepository.create({
+        user1,
+        user2,
+        created_at: new Date(),
+        updated_at: new Date(),
+        user1_unread_count: 0,
+        user2_unread_count: 0
+    });
+    await chatRepository.save(chat);
+
+    console.log('Sample users created:', user1, user2, chat);
 }
 
-function createCustomUser(data: Partial<BaseUser>): BaseUser {
-    const UserConstructor = getConfigVariable("user_entity");
-    const user = new UserConstructor();
+function createCustomUser(defaultData: Partial<BaseUser>, additionalProperties: Record<string, any>): BaseUser {
+    const UserEntity = getConfigVariable("user_entity");
+    const user = new UserEntity();
 
-    const mapping : UserFieldMapping = getConfigVariable("user_mapping");
-    
-    // TODO: fix this to not be ugly with ts and check if getters and setters on usre field work correctly
-    for (const [defaultAttributeName, { name: customAttributeName }] of Object.entries(mapping)) {
-        // Use 'as any' to bypass strict index type checking
-        const valueToAssign = (data as any)[defaultAttributeName];
+    const mapping: UserFieldMapping = getConfigVariable("user_mapping");
 
-        if (valueToAssign !== undefined) {
-            // if attribute wasn't overridden
-            if (defaultAttributeName == customAttributeName) {
-                (user as any)[defaultAttributeName] = valueToAssign;
-            // if attribute was overridden, use the custom name
-            } else {
-                (user as any)[customAttributeName] = valueToAssign;
-            }
-        }
+    // Check if values for overridden default properties are provided or use default values
+    user.full_name = additionalProperties[mapping.full_name!.name] ?? defaultData.full_name;
+    user.bio = additionalProperties[mapping.bio!.name] ?? defaultData.bio;
+    user.avatar = additionalProperties[mapping.avatar!.name] ?? defaultData.avatar;
+
+    for (const [key, value] of Object.entries(additionalProperties)) {
+        (user as any)[key] = value;
     }
-// // --- Add loggingQ here ---
-//     console.log(`--- Inspecting properties for UserConstructor: ${UserConstructor.name} ---`);
-//     const propertiesToInspect = ['full_name', 'bio', 'avatar'];
-//     // Also inspect the actual mapped column names if known (e.g., from mapping)
-//     if (mapping.full_name) propertiesToInspect.push(mapping.full_name.name);
-//     if (mapping.bio) propertiesToInspect.push(mapping.bio.name);
-//     if (mapping.avatar) propertiesToInspect.push(mapping.avatar.name);
 
-//     for (const propName of [...new Set(propertiesToInspect)]) { // Use Set to avoid duplicates
-//         // Check descriptor on the instance itself
-//         const instanceDescriptor = Object.getOwnPropertyDescriptor(user, propName);
-//         console.log(`Descriptor for '${propName}' on instance:`, instanceDescriptor);
-
-//         // Check descriptor on the prototype (where getters/setters are usually defined)
-//         const prototypeDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(user), propName);
-//         console.log(`Descriptor for '${propName}' on prototype:`, prototypeDescriptor);
-//     }
-//     console.log(`--- End inspection ---`);
-//     // --- End logging ---
-
-
-    // console.log('Mapping:', mapping);
-    // if (data.full_name) user.full_name = data.full_name;
-    // if (data.bio) user.bio = data.bio;
-    // console.log('User:', user);
-    // if (data.avatar) user.avatar = data.avatar;
     return user;
+}
+
+async function userExists(user: BaseUser, userRepository: Repository<BaseUser>): Promise<boolean> {
+    const mapping: UserFieldMapping = getConfigVariable("user_mapping");
+
+    const findUserQuery: FindOptionsWhere<BaseUser> = { 
+        [mapping.full_name!.name]: user.full_name,
+        [mapping.avatar!.name]: user.avatar,
+        [mapping.bio!.name]: user.bio,
+    };
+
+    const existingUser = await userRepository.findOneBy(findUserQuery);
+
+    if (existingUser) {
+        console.log(`User with ${mapping.full_name!.name} "${user.full_name}", ${mapping.avatar!.name} "${user.avatar}", ${mapping.bio!.name} "${user.bio}" already exists. Skipping initialization.`);
+        return true;
+    } 
+    console.log(" false userExists", user, findUserQuery, existingUser);
+    return false;
 }
