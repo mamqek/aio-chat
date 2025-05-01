@@ -140,11 +140,11 @@ router.post('/login', async (req: Request, res: Response) => {
             expiresIn: '24h'  // Token validity period
         }
     );
-
+    
     res.cookie(getConfigVariable('TOKEN_NAME'), token, {
         httpOnly: true,
         secure: getConfigVariable('production'),
-        sameSite: 'lax',
+        sameSite: getConfigVariable('production') ? 'none' : 'lax',
         maxAge: 60 * 60 * 1000, // 1 hour
     });
 
