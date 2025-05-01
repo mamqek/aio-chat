@@ -4,19 +4,19 @@
 // import { fileURLToPath } from 'url';
 
 // const isCommonJS: boolean = typeof __dirname !== 'undefined';
-// // console.warn("isCommonJS", isCommonJS, global.__dirname);
+// // console.warn("isCommonJS", isCommonJS, global.__srcDir);
 // // console.trace(`[compat/init trace] PID: ${process.pid}`);
 
-// if (!global.__dirname) {
+// if (!global.__srcDir) {
 //     if (!isCommonJS) {
 //         try {
 //             const __filename = fileURLToPath(import.meta.url);
-//             global.__dirname = path.dirname(__filename);
+//             global.__srcDir = path.dirname(__filename);
 //         } catch (error) {
 //             console.error("Error in ESM path resolution:", error);
 //         }
 //     } else {
-//         global.__dirname = __dirname;
+//         global.__srcDir = __dirname;
 //     }
 // }
 
@@ -32,12 +32,14 @@ import { fileURLToPath } from 'url';
 
 const isCommonJS: boolean = typeof __dirname !== 'undefined';
 
-if (!global.__dirname) {
+if (!global.__srcDir) {
     let calculatedDir: string;
 
     if (!isCommonJS) {
         try {
             const currentFileDir = path.dirname(fileURLToPath(import.meta.url));
+            global.__dirname = currentFileDir;
+
             if (path.basename(currentFileDir) === 'dist') {
                 // If running from dist, go up one more level and then into 'src'
                 calculatedDir = path.resolve(currentFileDir, '../src');
@@ -45,17 +47,18 @@ if (!global.__dirname) {
                 // If not in dist, then in config, so just go up one level to 'src'
                 calculatedDir = path.resolve(currentFileDir, '..');
             }
-            global.__dirname = calculatedDir;
+            global.__srcDir = calculatedDir;
 
         } catch (error) {
             console.error("Error in ESM path resolution:", error);
             // Fallback or default if calculation fails
-            global.__dirname = process.cwd(); // Or some other sensible default
+            global.__srcDir = process.cwd(); // Or some other sensible default
         }
     } else {
         // For CommonJS, __dirname usually points to the directory of the executed file.
         // We need similar logic to ensure it points to 'src'.
         const currentFileDir = __dirname; // In CJS, __dirname is available
+        global.__dirname = currentFileDir;
         const parentDir = path.resolve(currentFileDir, '..');
 
         if (path.basename(parentDir) === 'dist') {
@@ -63,7 +66,7 @@ if (!global.__dirname) {
         } else {
             calculatedDir = parentDir;
         }
-        global.__dirname = calculatedDir;
+        global.__srcDir = calculatedDir;
     }
 }
 
@@ -73,4 +76,4 @@ export const builtFileExtension = isCommonJS ? 'cjs' : 'js';
 export { isCommonJS };
 
 // Optional: Log the final __dirname for verification during startup
-// console.log(`[Compatibility] global.__dirname set to: ${global.__dirname}`);
+// console.log(`[Compatibility] global.__srcDir set to: ${global.__srcDir}`);

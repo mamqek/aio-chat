@@ -61,7 +61,7 @@ export async function handleMigrations(): Promise<void> {
 }
 
 async function buildMigrations(): Promise<void> {
-    const serviceDir = path.resolve(global.__dirname, "../"); // packages/service
+    const serviceDir = path.resolve(global.__srcDir, "../"); // packages/service
     return new Promise((resolve, reject) => {
         exec("npm run build:migrations", { cwd: serviceDir }, (err, stdout, stderr) => {
             if (err) {
@@ -79,7 +79,7 @@ async function buildMigrations(): Promise<void> {
 }
 
 async function buildDataSource(): Promise<void> {
-    const serviceDir = path.resolve(global.__dirname, "../"); // packages/service
+    const serviceDir = path.resolve(global.__srcDir, "../"); // packages/service
     return new Promise((resolve, reject) => {
         exec("npm run build:datasource", { cwd: serviceDir }, (err, stdout, stderr) => {
             if (err) {
@@ -98,7 +98,7 @@ async function buildDataSource(): Promise<void> {
 // TODO: figure out how to preuilt migrations and amaybe datasource, so there is no need to include whol src into publish (need it as migrations imports other files and if import files are absent error happens)
 export async function runMigrations(): Promise<void> {
     console.log("Running migrations...");
-    const dataSourcePath = path.resolve(global.__dirname, `../dist/dataSourceRef.cjs`);
+    const dataSourcePath = path.resolve(global.__srcDir, `../dist/dataSourceRef.cjs`);
 
     // Add User_Config to ENV so spawned process has access to config developer provided (needed for User migration)
     const USER_CONFIG = JSON.stringify(getConfig());
@@ -142,7 +142,7 @@ export async function runMigrations(): Promise<void> {
 
 export async function revertMigrations(): Promise<void> {
     console.log("Reverting migrations...");
-    const dataSourcePath = path.resolve(global.__dirname, `../dist/dataSourceRef.${builtFileExtension}`);
+    const dataSourcePath = path.resolve(global.__srcDir, `../dist/dataSourceRef.${builtFileExtension}`);
     
     // Add User_Config to ENV so spawned process has access to config developer provided (needed for User migration)
     const USER_CONFIG = JSON.stringify(getConfig());
