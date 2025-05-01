@@ -1,11 +1,11 @@
 {
   "name": "@aio-chat/all",
-  "version": "1.0.1-13",
+  "version": "1.0.1-14",
   "description": "All in one chat includes a web component and a backend service for real-time chat. This package contains both the client and server packages.",
   "type": "module",
   "dependencies": {
-    "@aio-chat/client": "^1.0.1-13",
-    "@aio-chat/service": "^1.0.1-13"
+    "@aio-chat/client": "^1.0.1-14",
+    "@aio-chat/service": "^1.0.1-14"
   },
   "repository": {
     "type": "git",
