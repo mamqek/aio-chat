@@ -1,6 +1,6 @@
 {
   "name": "@aio-chat/client",
-  "version": "1.0.1-12",
+  "version": "1.0.1-13",
   "description": "All in one chat includes a web component and a backend service for real-time chat. This is the client package of @aio-chat",
   "type": "module",
   "main": "./dist/chat-widget.umd.cjs",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aio-chat/shared": "^1.0.1-12",
+    "@aio-chat/shared": "^1.0.1-13",
     "@tailwindcss/container-queries": "^0.1.1",
     "axios": "^1.8.1",
     "class-variance-authority": "^0.7.1",
