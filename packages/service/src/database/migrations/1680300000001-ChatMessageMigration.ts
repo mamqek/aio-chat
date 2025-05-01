@@ -3,7 +3,6 @@ import {
     QueryRunner,
     Table,
     TableIndex,
-    TableForeignKey,
 } from "typeorm";
 
 export class ChatMessageMigration1680300000001 implements MigrationInterface {
@@ -86,25 +85,6 @@ export class ChatMessageMigration1680300000001 implements MigrationInterface {
             }),
         );
 
-        await queryRunner.createForeignKey(
-            "chat_messages",
-            new TableForeignKey({
-                columnNames: ["chat_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "chats",
-                onDelete: "CASCADE",
-            }),
-        );
-        await queryRunner.createForeignKey(
-            "chat_messages",
-            new TableForeignKey({
-                columnNames: ["replied_to"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "chat_messages",
-                onDelete: "CASCADE",
-            }),
-        );
-
         console.log("Migration for ChatMessage table completed successfully.");
     }
 
@@ -114,22 +94,6 @@ export class ChatMessageMigration1680300000001 implements MigrationInterface {
         if (!table) {
             console.warn("Table 'chat_messages' does not exist. Skipping 'down' migration.");
             return;
-        }
-
-        const fkRepliedTo = table.foreignKeys.find(
-            (fk) =>
-                fk.columnNames.indexOf("replied_to") !== -1 &&
-                fk.referencedTableName === "chat_messages",
-        );
-        if (fkRepliedTo) {
-            await queryRunner.dropForeignKey("chat_messages", fkRepliedTo);
-        }
-
-        const fkChat = table.foreignKeys.find(
-            (fk) => fk.columnNames.indexOf("chat_id") !== -1,
-        );
-        if (fkChat) {
-            await queryRunner.dropForeignKey("chat_messages", fkChat);
         }
 
         await queryRunner.dropIndex("chat_messages", "IDX_CHAT_MESSAGE_CHAT");

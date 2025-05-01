@@ -58,7 +58,7 @@ export class UserMigration1680300000005 implements MigrationInterface {
                     );
 
                     if (!userWantsToAddColumns) {
-                        throw new Error('Canceled to provide custom User entity. Exiting...');
+                        throw new Error('Canceled to provide custom User entity');
                     } 
                 } else {
                     console.warn(`All required columns are present in the ${table_name} table. No changes needed.`);
@@ -89,6 +89,7 @@ export class UserMigration1680300000005 implements MigrationInterface {
                         table_name,
                         new TableColumn(column),
                     );
+                    console.log(`Added column "${column.name}" to ${table_name} table.`);
                 }
 
                 addedColumns = columnsToAdd.map(col => col.name).join(", ");
@@ -99,9 +100,8 @@ export class UserMigration1680300000005 implements MigrationInterface {
             await queryRunner.commitTransaction();
             console.log("Migration for User table completed successfully.");
         } catch (error) {
-            console.error("Error during migration:", error);
             await queryRunner.rollbackTransaction();
-            throw error;
+            throw new Error(`during User migration: ${error}`);
         }
     }
 
@@ -182,8 +182,9 @@ export class UserMigration1680300000005 implements MigrationInterface {
                 type: "text",
             };
 
-            // SQLite requires default values to be strings, so we need to wrap them in quotes.
-            if (column.default && getConfigVariable("DB_TYPE") == "sqlite") {
+            // SQLite requires default values to be strings, so we need to wrap them in quotes
+            // Apparently postgres also does
+            if (column.default && (getConfigVariable("DB_TYPE") == "sqlite" || getConfigVariable("DB_TYPE") == "postgres")) {
                 base.default = `'${column.default}'`;
             }
 
@@ -247,10 +248,17 @@ export class UserMigration1680300000005 implements MigrationInterface {
         const migrationName = this.constructor.name;
         const timestamp = migrationName.match(/\d+$/)?.[0] || Date.now().toString();
 
-        await queryRunner.query(
-            `INSERT INTO chat_migrations (name, timestamp, columns, table_name) VALUES (?, ?, ?, ?)`,
-            [migrationName, timestamp, columnsAdded, getConfigVariable("user_table_name")],
-        );
+        // await queryRunner.query(
+        //     `INSERT INTO chat_migrations (name, timestamp, columns, table_name) VALUES (?, ?, ?, ?)`,
+        //     [migrationName, timestamp, columnsAdded, getConfigVariable("user_table_name")],
+        // );
+
+        await queryRunner.manager.insert("chat_migrations", {
+            name: migrationName,
+            timestamp: timestamp, // Use the extracted or current timestamp
+            columns: columnsAdded,
+            table_name: getConfigVariable("user_table_name"),
+        });
     }
 
     async userMigrationRecord(queryRunner: QueryRunner): Promise<any> { 

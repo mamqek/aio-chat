@@ -3,7 +3,6 @@ import {
     QueryRunner,
     Table,
     TableIndex,
-    TableForeignKey,
 } from "typeorm";
 
 export class ChatMigration1680300000000 implements MigrationInterface {
@@ -84,35 +83,6 @@ export class ChatMigration1680300000000 implements MigrationInterface {
             }),
         );
 
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["user1_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "users",
-                onDelete: "CASCADE",
-            }),
-        );
-        // TODO: change reference to users table to the one in config
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["user2_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "users",
-                onDelete: "CASCADE",
-            }),
-        );
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["last_message_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "chat_messages",
-                onDelete: "SET NULL",
-            }),
-        );
-
         console.log("Migration for Chat table completed successfully.");
     }
 
@@ -123,27 +93,6 @@ export class ChatMigration1680300000000 implements MigrationInterface {
             return;
         }
 
-        const fkLastMessage = table.foreignKeys.find(
-            (fk) => fk.columnNames.indexOf("last_message_id") !== -1,
-        );
-        if (fkLastMessage) {
-            await queryRunner.dropForeignKey("chats", fkLastMessage);
-        }
-
-        const fkUser1 = table.foreignKeys.find(
-            (fk) => fk.columnNames.indexOf("user1_id") !== -1,
-        );
-        if (fkUser1) {
-            await queryRunner.dropForeignKey("chats", fkUser1);
-        }
-
-        const fkUser2 = table.foreignKeys.find(
-            (fk) => fk.columnNames.indexOf("user2_id") !== -1,
-        );
-        if (fkUser2) {
-            await queryRunner.dropForeignKey("chats", fkUser2);
-        }
-        
         await queryRunner.dropIndex("chats", "IDX_CHAT_USER1");
         await queryRunner.dropIndex("chats", "IDX_CHAT_USER2");
         await queryRunner.dropIndex("chats", "IDX_CHAT_LAST_MESSAGE");

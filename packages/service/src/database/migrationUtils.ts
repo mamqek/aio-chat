@@ -55,7 +55,8 @@ export async function handleMigrations(): Promise<void> {
         await buildDataSource();
         await runMigrations();
     } catch (error) {
-        console.error("Migration handling failed:", error);
+        console.error("handleMigrations() failed:", error);
+        process.exit(1);
     }
 }
 
@@ -94,7 +95,7 @@ async function buildDataSource(): Promise<void> {
         });
     });
 }
-
+// TODO: figure out how to preuilt migrations and amaybe datasource, so there is no need to include whol src into publish (need it as migrations imports other files and if import files are absent error happens)
 export async function runMigrations(): Promise<void> {
     console.log("Running migrations...");
     const dataSourcePath = path.resolve(global.__dirname, `../dist/dataSourceRef.cjs`);

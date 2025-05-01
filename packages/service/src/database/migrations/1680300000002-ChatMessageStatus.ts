@@ -2,7 +2,6 @@ import {
     MigrationInterface,
     QueryRunner,
     Table,
-    TableForeignKey,
 } from "typeorm";
 
 export class ChatMessageStatusMigration1680300000002 implements MigrationInterface {
@@ -46,16 +45,6 @@ export class ChatMessageStatusMigration1680300000002 implements MigrationInterfa
             true,
         );
 
-        await queryRunner.createForeignKey(
-            "chat_message_statuses",
-            new TableForeignKey({
-                columnNames: ["message_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "chat_messages",
-                onDelete: "CASCADE",
-            }),
-        );
-
         console.log("Migration for ChatMessageStatus table completed successfully.");
     }
 
@@ -65,13 +54,6 @@ export class ChatMessageStatusMigration1680300000002 implements MigrationInterfa
         if (!table) {
             console.warn("Table 'chat_message_statuses' does not exist. Skipping 'down' migration.");
             return;
-        }
-
-        const fkMessage = table.foreignKeys.find(
-            (fk) => fk.columnNames.indexOf("message_id") !== -1,
-        );
-        if (fkMessage) {
-            await queryRunner.dropForeignKey("chat_message_statuses", fkMessage);
         }
 
         await queryRunner.dropTable("chat_message_statuses");
