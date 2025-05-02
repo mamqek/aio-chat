@@ -36,7 +36,6 @@ router.post(
                 const attachments = (req.files as Express.Multer.File[]).filter(
                     file => file.fieldname === 'attachment[]'
                 );
-                console.log('Attachments:', attachments);
                 if (attachments.length > 0) {
                     message = await chatService.processAttachments(message, attachments);
                 }
