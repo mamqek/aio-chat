@@ -1,37 +1,23 @@
 <template>
-    <!-- :active="!cartStore.isEmpty()" -->
+    <!-- TODO: provide config to change icon  or image/svg -->
+     <!-- make it a part of configureation of widget styles together with color, diable anymation and so on  -->
+     <!-- also imagine smth fr small chat window plaement, as if button is mwhr else, probably window would be better next to it, also window size  -->
     <v-fab
         size="x-large"
         color="var(--white-select)"
         icon=""
         @click="chatDialog = !chatDialog"
-        class="pulse-effect tw-text-[var(--primary)] tw-pointer-events-auto tw-relative !tw-size-16"
+        class="tw-text-primary tw-pointer-events-auto tw-relative !tw-size-16"
         :class="{'widget-opened' : chatDialog}"
     >
         <i v-if="chatDialog" class='bx bx-x tw-text-5xl tw-text-black'></i>
-        <i v-else class='bx bxs-conversation font-4 tw-text-black' :class="{'bx-tada' : chatStore.totalUnreadCount > 0}"></i>
+        <i v-else class='bx bxs-conversation tw-text-4xl tw-text-black' :class="{'bx-tada' : chatStore.totalUnreadCount > 0}"></i>
         <span v-if="chatStore.totalUnreadCount > 0" 
             class="tw-rounded-full tw-size-6 tw-text-white tw-bg-primary tw-absolute -tw-top-1 -tw-left-1"
         >
             {{ chatStore.totalUnreadCount }}
         </span>
     </v-fab>
-    <!-- <v-fab
-        size="x-large"
-        color="var(--white-select)"
-        icon=""
-        @click="chatDialog = !chatDialog"
-        class="pulse-effect tw-text-[var(--primary)] tw-pointer-events-auto tw-relative !tw-size-16"
-        :class="{'widget-opened' : chatDialog}"
-    >
-        <i v-if="chatDialog" class='bx bx-x tw-text-5xl tw-text-black'></i>
-        <i v-else class='bx bxs-conversation font-4 tw-text-black' :class="{'bx-tada' : chatStore.totalUnreadCount > 0}"></i>
-        <span v-if="chatStore.totalUnreadCount > 0" 
-            class="tw-rounded-full tw-size-6 tw-text-white tw-bg-primary tw-absolute -tw-top-1 -tw-left-1"
-        >
-            {{ chatStore.totalUnreadCount }}
-        </span>
-    </v-fab> -->
 
     <v-dialog 
         v-model="chatDialog" 

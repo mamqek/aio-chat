@@ -17,7 +17,7 @@
             <div v-if="chat.last_message" class="tw-flex tw-items-center tw-gap-2">
                 <ChatMessageStatus :message="chat.last_message" />
                 <span class="tw-truncate tw-text-start tw-text-muted-foreground">{{ chat.last_message.attachment ? `Attachment(${chat.last_message.attachment.length}) ` : '' }}{{ chat.last_message.text }}</span>
-                <div v-if="chat[myChatAttrName + '_unread_count'] != 0" class="tw-ms-auto tw-flex tw-h-6 tw-w-6 tw-flex-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-[var(--primary)] tw-text-sm tw-text-white">{{ chat[myChatAttrName + '_unread_count'] }}</div>
+                <div v-if="chat[myChatAttrName + '_unread_count'] != 0" class="tw-ms-auto tw-flex tw-h-6 tw-w-6 tw-flex-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-primary tw-text-sm tw-text-white">{{ chat[myChatAttrName + '_unread_count'] }}</div>
             </div>
         </div>
         <div class="tw-absolute tw-bottom-0 tw-end-0 tw-top-0 tw-flex tw-items-center tw-bg-gradient-to-l tw-from-50% tw-px-4 tw-opacity-0 group-hover:tw-opacity-100 tw-from-gray-200 dark:tw-from-muted">
