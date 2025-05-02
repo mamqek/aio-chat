@@ -136,7 +136,6 @@ export const useChatStore = defineStore('chat', {
         // Called when chat is opened (selects it in chatSidebar or has chat_id saved and opens chatWindow)
         async openChat(chat_id) {
             this.setCurrentChatId(chat_id);
-            // Could be already fetched and up to date as MarkAsRead and MessageSent event are listened
             if (!this.chatHistory[chat_id]) {
                 await this.fetchChatHistory(chat_id);
             } else {
@@ -251,6 +250,10 @@ export const useChatStore = defineStore('chat', {
             let chat_id = data.chatId;
             let messagesIdsSet = new Set(data.messagesIds);
             // console.log('Marked as read:', messagesIdsSet);
+
+            let chat = this.chats.find(chat => chat.id == chat_id)
+            chat[this.getChatUserColumnName(chat_id) + '_unread_count'] = 0;
+            chat.last_message.status.status = 'read';
 
             if (!this.chatHistory[chat_id]) return;
 
