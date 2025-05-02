@@ -12,6 +12,7 @@ import { BaseUser } from './entities/BaseUser.js';
 // import NodeCache from 'node-cache';
 // const cache = new NodeCache();
 
+// TODO: refactor to split responsobilities for future different modes : Chat, Message, User
 export class ChatService {
 
     /**
@@ -54,7 +55,7 @@ export class ChatService {
         // Determine which unread count to update.
         let myChatUser: 'user1' | 'user2';
         let otherChatUser: 'user1' | 'user2';
-        if (authUserId === chat.user1_id) {
+        if (authUserId == chat.user1_id) {
             myChatUser = 'user1';
             otherChatUser = 'user2';
         } else {
@@ -180,7 +181,7 @@ export class ChatService {
         
         let unreadCount = 0;
         for (const chat of chats) {
-            unreadCount += (chat.user1_id === authUserId ? chat.user1_unread_count : chat.user2_unread_count);
+            unreadCount += (chat.user1_id == authUserId ? chat.user1_unread_count : chat.user2_unread_count);
         }
         return unreadCount;
     }
@@ -204,7 +205,7 @@ export class ChatService {
 
         // Filter messages where receiver_id equals authUserId and status is SENT.
         const messages = chat.messages.filter(
-            message => message.receiver_id === authUserId && message.status && message.status.status === ChatMessageStatusEnum.SENT
+            message => message.receiver_id == authUserId && message.status && message.status.status === ChatMessageStatusEnum.SENT
         );
         if (messages.length > 0) {
             const senderId = messages[0].sender_id;
@@ -242,7 +243,7 @@ export class ChatService {
         const chatRepository = AppDataSource.getRepository(Chat);
         const chat = await chatRepository.findOne({ where: { id: chatId } });
         if (chat) {
-            if (chat.user1_id === authUserId) {
+            if (chat.user1_id == authUserId) {
                 chat.user1_unread_count = 0;
             } else {
                 chat.user2_unread_count = 0;
