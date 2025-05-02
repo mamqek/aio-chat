@@ -25,7 +25,7 @@
 				<!-- Render v-card only if #content slot exists -->
 				<v-card
 					:title="name"
-					:class="['rounded-modal', cardClasses]"
+					:class="['rounded-modal hide-scrollbar', cardClasses]"
 				>
                     <div class="!tw-px-4">
                         <slot name="content" />
