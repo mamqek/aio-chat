@@ -189,6 +189,8 @@ export default {
         },
 
         async handleFileUpload(event) {
+            let files = event.target.files;
+
             const getFilePreview = async (file) => {
                 return new Promise((resolve, reject) => {
                     if (file.type.startsWith('image/')) {
@@ -206,8 +208,8 @@ export default {
                 });
             };
 
-            for (var i = 0; i < event.target.files.length; i++) {
-                let file = event.target.files[i];
+            for (var i = 0; i < files.length; i++) {
+                let file = files[i];
 
                 if (file.size > 30000000) {
                     this.error = {
@@ -240,7 +242,7 @@ export default {
                 const attachmentPreview = await getFilePreview(file);
 
                 this.attachments.push({
-                    file: event.target.files[i],
+                    file: file,
                     preview: attachmentPreview,
                 });
             }
