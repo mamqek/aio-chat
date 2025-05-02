@@ -182,18 +182,18 @@ export const useChatStore = defineStore('chat', {
         },
 
         addMessage(message, chat_id) {
-            // console.log('Adding message:', message, chat_id);
-            
-            // Don't add the message if the chat history is not loaded, so it will be fetched when the chat is opened
-            if (!this.chatHistory[chat_id]) return;
+            this.chatHistory[chat_id]?.push(message);
 
-            this.chatHistory[chat_id].push(message); // Append the item to the array
-
-            // Update the chat info 
-            let chat = this.chats.find(chat => chat.id == chat_id);
+            // Update the last message of the chat
+            const chatIndex = this.chats.findIndex(c => c.id === chat_id)
+            if (chatIndex === -1) {
+                console.error(`Chat with ID ${chat_id} not found in chats array.`);
+                return;
+            }
+            const [chat] = this.chats.splice(chatIndex, 1)
             chat.last_message = message;
+
             // Move chat on first place
-            this.chats = this.chats.filter(c => c.id !== chat_id);
             this.chats.unshift(chat);      
         },
 
