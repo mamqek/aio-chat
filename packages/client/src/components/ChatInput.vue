@@ -54,7 +54,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip tw-h-4 tw-w-4">
                             <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
                         </svg>
-                        <input type="file" id="fileInput" multiple class="tw-hidden" @change="handleFileUpload">
+                        <input type="file" ref="fileInput" id="fileInput" multiple class="tw-hidden" @change="handleFileUpload">
                     </Button>
                     <!-- <button class="tw-inline-flex tw-items-center tw-justify-center tw-whitespace-nowrap tw-text-sm tw-font-medium tw-ring-offset-background tw-transition-colors focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2 disabled:tw-pointer-events-none disabled:tw-opacity-50 hover:tw-bg-accent hover:tw-text-accent-foreground tw-h-11 tw-w-11 tw-rounded-full tw-p-0" data-state="closed">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic tw-h-4 tw-w-4">
@@ -184,7 +184,8 @@ export default {
                 this.dialogOpen = true;
                 return;
             }
-            document.getElementById('fileInput').click();
+
+            this.$refs.fileInput.click();
         },
 
         async handleFileUpload(event) {
