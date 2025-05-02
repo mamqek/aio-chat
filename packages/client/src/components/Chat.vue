@@ -64,16 +64,17 @@
             <v-card-text>
                 <div class="tw-flex tw-flex-wrap tw-gap-2" id="attachment_dialog">
                     <div class="tw-min-w-28 tw-flex-1 tw-relative tw-group hover:tw-opacity-80 tw-my-auto" v-for="attachment in attachmentDialogData" :key="attachment.name">
-                        <img v-if="attachment.type.startsWith('image')" :src="'/' + attachment.url" :alt="attachment.name" class="tw-w-full tw-h-auto tw-rounded-md" />
+                        <!--src below had  '/' +, i dont rememebr what was the problem that I put it here  -->
+                        <img v-if="attachment.type.startsWith('image')" :src="attachment.url" :alt="attachment.name" class="tw-w-full tw-h-auto tw-rounded-md" />
                         <div v-else class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-border tw-rounded-md tw-p-4 tw-text-muted-foreground tw-aspect-square">
                             <i v-if="attachment.type.endsWith('pdf')" class='bx bxs-file-pdf tw-text-5xl'></i>
                             <i v-else class='bx bxs-file-doc tw-text-5xl'></i>
                             <p class="tw-text-center tw-break-all">{{ attachment.name }}</p>
                         </div>
                         <a 
+                            @click.prevent="triggerDownload(attachment)"
                             class="tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw-translate-x-[-50%] tw-translate-y-[-50%] tw-opacity-0 group-hover:tw-opacity-100 tw-transition-opacity tw-text-black"
-                            :download="attachment.name"
-                            :href="attachment.url"
+                            href="#"
                         >
                             <i class='bx bxs-download tw-text-5xl tw-text-primary'></i>
                         </a>
@@ -164,11 +165,58 @@ export default {
             this.attachmentDialogData = attachmentData;
         },
 
-        downloadAllAttachments() {
-            const links = document.querySelectorAll('#attachment_dialog a'); // Select all <a> tags inside the dialog
-            links.forEach(link => {
-                link.click(); // Trigger a click for each link
-            });
+        async triggerDownload(attachment) { // New reusable method
+            if (!attachment || !attachment.url || !attachment.name) {
+                console.error("Invalid attachment data provided for download.");
+                return;
+            }
+            try {
+                console.log(`Fetching: ${attachment.url}, Filename: ${attachment.name}`);
+                // Fetch the file content as a blob
+                const response = await fetch(attachment.url, {
+                    credentials: 'include' 
+                }); 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} for ${attachment.name}`);
+                }
+
+                const blob = await response.blob();
+
+                // Create a temporary URL for the blob
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                // Create a temporary link element
+                const tempLink = document.createElement('a');
+                tempLink.style.display = 'none';
+                tempLink.href = blobUrl;
+                tempLink.setAttribute('download', attachment.name); // Set the desired filename
+
+                // Append to body, click, and remove
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+
+                // Revoke the blob URL to free up memory
+                window.URL.revokeObjectURL(blobUrl);
+                console.log(`Successfully triggered download for: ${attachment.name}`);
+
+            } catch (error) {
+                console.error(`Failed to download ${attachment.name}:`, error);
+                // Optionally notify the user about the failed download
+            }
+        },
+
+        async downloadAllAttachments() { 
+            if (!this.attachmentDialogData) return;
+            console.log("Attempting to download all attachments...");
+
+            // Iterate and call the reusable method
+            for (const attachment of this.attachmentDialogData) {
+                await this.triggerDownload(attachment); // Call the reusable method
+                // Optional delay if needed
+                // await new Promise(resolve => setTimeout(resolve, 100)); 
+            }
+            console.log("Finished attempting downloads.");
         }
     },
 };
