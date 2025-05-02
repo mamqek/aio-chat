@@ -20,6 +20,7 @@ export class ChatWidget extends HTMLElement {
         this.injectStyles();
     }
 
+    // TODO: figure out why vuetify is in node_modules of client but the ret is in root node_modules, check with stats.html after
     /**
      * Injects CSS styles into the shadow DOM.
      * Combines Vuetify and main styles for encapsulated styling.
@@ -29,6 +30,12 @@ export class ChatWidget extends HTMLElement {
         const styleEl = document.createElement('style');
         styleEl.textContent = combinedCss;
         this.shadowRootInstance.appendChild(styleEl);
+
+        //Inject Boxicons via <link> tag
+        const boxiconsLink = document.createElement('link');
+        boxiconsLink.setAttribute('rel', 'stylesheet');
+        boxiconsLink.setAttribute('href', 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
+        this.shadowRootInstance.appendChild(boxiconsLink); // Append directly to shadow root
     }
 
     /**
