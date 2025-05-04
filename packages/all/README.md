@@ -16,7 +16,7 @@
 
 The documentation is divided into two main sections:
 
-1. **[Client](./docs/web-component/index.md)**: Learn how to set up and configure the web component provided by @aio-chat/client.
+1. **[Client](./docs/client/index.md)**: Learn how to set up and configure the web component provided by @aio-chat/client.
 2. **[Service](./docs/service/index.md)**: Understand the @aio-chat/service, its configuration, and customization options.
 
 ---
@@ -58,7 +58,7 @@ The @aio-chat/client allows you to embed a web component into your application. 
    });
    ```
 
-For more details, refer to the [Client Documentation](./docs/web-component/index.md).
+For more details, refer to the [Client Documentation](./docs/client/index.md).
 
 ---
 
@@ -104,7 +104,7 @@ Both the @aio-chat/client and @aio-chat/service are highly configurable. Key con
   - `user_id`: The ID of the authenticated user.
   - `token`: The JWT token used for authentication, check [Service authentication docs](./docs/service/authentication.md#authentication-methods).
 
-For a full list of options, refer to the [Client Configuration Documentation](./docs/web-component/config.md).
+For a full list of options, refer to the [Client Configuration Documentation](./docs/client/config.md).
 
 - **@aio-chat/service**:
   - `DB_TYPE`: Type of database (`sqlite`, `mysql`, or `postgres`).

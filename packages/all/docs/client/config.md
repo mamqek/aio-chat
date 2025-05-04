@@ -21,7 +21,7 @@ The `user_id` is required for identifying the user. Avoid exposing it directly i
 
 ### Token
 
-The `token` is used for JWT authentication and should match the configuration in your @aio-chat/service, check [Service authentication docs](./docs/service/authentication.md#authentication-methods).
+The `token` is used for JWT authentication and should match the configuration in your @aio-chat/service, check [Service authentication docs](./../service/authentication.md#authentication-methods).
 
 ### Container
 

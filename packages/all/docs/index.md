@@ -16,8 +16,8 @@
 
 The documentation is divided into two main sections:
 
-1. **[Client](./docs/web-component/index.md)**: Learn how to set up and configure the web component provided by @aio-chat/client.
-2. **[Service](./docs/service/index.md)**: Understand the @aio-chat/service, its configuration, and customization options.
+1. **[Client](./client/index.md)**: Learn how to set up and configure the web component provided by @aio-chat/client.
+2. **[Service](./service/index.md)**: Understand the @aio-chat/service, its configuration, and customization options.
 
 ---
 
@@ -58,7 +58,7 @@ The @aio-chat/client allows you to embed a web component into your application. 
    });
    ```
 
-For more details, refer to the [Client Documentation](./docs/web-component/index.md).
+For more details, refer to the [Client Documentation](./client/index.md).
 
 ---
 
@@ -83,7 +83,7 @@ The @aio-chat/service provides the backend functionality required for chat, incl
      .then(() => console.log("Chat service started successfully."))
      .catch((err) => console.error("Failed to start chat service:", err));
    ```
-    For the start you can avoid providing config, but later see all options [here](./docs/service/config.md)
+    For the start you can avoid providing config, but later see all options [here](./service/config.md)
 3. Add a start command to your `package.json`:
    ```json
    "scripts": {
@@ -91,7 +91,7 @@ The @aio-chat/service provides the backend functionality required for chat, incl
    }
    ```
 
-For more details, refer to the [Service Documentation](./docs/service/index.md).
+For more details, refer to the [Service Documentation](./service/index.md).
 
 ---
 
@@ -102,16 +102,16 @@ Both the @aio-chat/client and @aio-chat/service are highly configurable. Key con
 - **@aio-chat/client**:
   - `service_url`: The base URL where you host @aio-chat/service.
   - `user_id`: The ID of the authenticated user.
-  - `token`: The JWT token used for authentication, check [Service authentication docs](./docs/service/authentication.md#authentication-methods).
+  - `token`: The JWT token used for authentication, check [Service authentication docs](./service/authentication.md#authentication-methods).
 
-For a full list of options, refer to the [Client Configuration Documentation](./docs/web-component/config.md).
+For a full list of options, refer to the [Client Configuration Documentation](./client/config.md).
 
 - **@aio-chat/service**:
   - `DB_TYPE`: Type of database (`sqlite`, `mysql`, or `postgres`).
   - `AUTH_MODE`: Authentication mode (`direct`, `auth-endpoint`, `jwt`, `proxy`, or `custom`).
   - `user_mapping`: Map user fields to your database schema.
 
-For a full list of options, refer to the [Service Configuration Documentation](./docs/service/config.md).
+For a full list of options, refer to the [Service Configuration Documentation](./service/config.md).
 
 ---
 
@@ -125,7 +125,7 @@ For a full list of options, refer to the [Service Configuration Documentation](.
 4. **Proxy**: Routes all chat requests through an authenticated backend.
 5. **Custom**: Implements custom authentication logic.
 
-For detailed instructions, refer to the [Authentication Documentation](./docs/service/authentication.md).
+For detailed instructions, refer to the [Authentication Documentation](./service/authentication.md).
 
 ---
 
@@ -136,7 +136,7 @@ For detailed instructions, refer to the [Authentication Documentation](./docs/se
 - **SQLite**: Ideal for quick setups or local development.
 - **MySQL/PostgreSQL**: Recommended for production environments.
 
-For more details, refer to the [Database Documentation](./docs/service/database.md).
+For more details, refer to the [Database Documentation](./service/database.md).
 
 ---
 
@@ -147,7 +147,7 @@ For more details, refer to the [Database Documentation](./docs/service/database.
 - **@aio-chat/client**: Customize the widget's behavior. In the future change modes and appearance. 
 - **@aio-chat/service**: Override default chat logic, user filtering, authentication and connect it to your existing database. 
 
-For advanced use cases, refer to the [Chat Service Documentation](./docs/service/chat-service.md).
+For advanced use cases, refer to the [Chat Service Documentation](./service/chat-service.md).
 
 ---
 
@@ -155,7 +155,7 @@ For advanced use cases, refer to the [Chat Service Documentation](./docs/service
 
 1. **Change Default Authentication Method**: Avoid using the default authentication method (`direct`) in production. Choose an authentication method that best fits your application's needs, such as `jwt`, `proxy`, or `custom`.
 2. **Update Authentication Defaults**: Replace default authentication values like `TOKEN_SECRET` and `PROXY_SECRET` with secure, unique values to enhance security.
-3. **Migrations**: Before running migrations on existing database make sure to check documentation on [User Entity customization](./docs/service/database.md#user-entity-customization)
+3. **Migrations**: Before running migrations on existing database make sure to check documentation on [User Entity customization](./service/database.md#user-entity-customization)
 
 ---
 
