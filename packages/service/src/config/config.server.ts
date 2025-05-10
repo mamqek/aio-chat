@@ -91,7 +91,7 @@ const defaultConfig: MyEnvConfig = {
     user_mapping: {
         full_name: {
             name: "full_name",
-            default: "'User'",
+            default: "User",
         },
         avatar: {
             name: "avatar",
