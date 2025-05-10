@@ -100,11 +100,13 @@ export async function runMigrations(): Promise<void> {
     console.log("Running migrations...");
     const dataSourcePath = path.resolve(global.__srcDir, `../dist/dataSourceRef.cjs`);
 
+    const npxBin = process.platform === "win32" ? "npx.cmd" : "npx";
+
     // Add User_Config to ENV so spawned process has access to config developer provided (needed for User migration)
     const USER_CONFIG = JSON.stringify(getConfig());
     return new Promise<void>((resolve, reject) => {
         // Use spawn here as it might be interactive prompt 
-        const child = spawn("npx.cmd", ["typeorm", "migration:run", "-d", dataSourcePath], {
+        const child = spawn(npxBin, ["typeorm", "migration:run", "-d", dataSourcePath], {
             env: { ...process.env, USER_CONFIG },
             stdio: ['inherit', 'pipe', 'pipe'],
             shell: true, // Had to add after updating from node 20 to 23 
