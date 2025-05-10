@@ -2,34 +2,7 @@ import { MigrationInterface, QueryRunner, TableForeignKey } from "typeorm";
 
 export class AddForeignKeys1680300000003 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Foreign keys for 'chats' table
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["user1_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "users", // Consider using a config value for the users table name
-                onDelete: "CASCADE",
-            }),
-        );
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["user2_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "users", // Consider using a config value for the users table name
-                onDelete: "CASCADE",
-            }),
-        );
-        await queryRunner.createForeignKey(
-            "chats",
-            new TableForeignKey({
-                columnNames: ["last_message_id"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "chat_messages",
-                onDelete: "SET NULL",
-            }),
-        );
+
 
 
 
@@ -65,24 +38,11 @@ export class AddForeignKeys1680300000003 implements MigrationInterface {
                 onDelete: "CASCADE",
             }),
         );
-
-        console.log("Foreign key constraints added successfully.");
+        
+        console.log("Migration for Foreign key constraints completed successfully.");
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop foreign keys for 'chats' table
-        const chatsTable = await queryRunner.getTable("chats");
-        if (chatsTable) {
-            const fkUser1 = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("user1_id") !== -1);
-            if (fkUser1) await queryRunner.dropForeignKey("chats", fkUser1);
-            const fkUser2 = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("user2_id") !== -1);
-            if (fkUser2) await queryRunner.dropForeignKey("chats", fkUser2);
-            const fkLastMessage = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("last_message_id") !== -1);
-            if (fkLastMessage) await queryRunner.dropForeignKey("chats", fkLastMessage);
-        } else {
-             console.warn("Table 'chats' not found, skipping FK drop.");
-        }
-
         // Drop foreign keys for 'chat_messages' table
         const chatMessagesTable = await queryRunner.getTable("chat_messages");
          if (chatMessagesTable) {

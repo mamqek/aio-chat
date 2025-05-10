@@ -4,6 +4,7 @@ import {
     Table,
     TableColumn,
     TableColumnOptions,
+    TableForeignKey
 } from "typeorm";
 import { isDefault, getConfigVariable, setConfig } from "../../config/config.server";
 import { promptUser } from "../../helper";
@@ -96,6 +97,8 @@ export class UserMigration1680300000005 implements MigrationInterface {
             }
 
             await this.storeColumnInformation(queryRunner, addedColumns);
+
+            await this.addForeignKeyConstraint(queryRunner);
         
             await queryRunner.commitTransaction();
             console.log("Migration for User table completed successfully.");
@@ -162,6 +165,19 @@ export class UserMigration1680300000005 implements MigrationInterface {
                 console.log(`Dropping column "${colName}" from ${savedTableName} table.`);
                 await queryRunner.dropColumn(savedTableName, colName);
             }
+        }
+
+        // Drop foreign keys for 'chats' table
+        const chatsTable = await queryRunner.getTable("chats");
+        if (chatsTable) {
+            const fkUser1 = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("user1_id") !== -1);
+            if (fkUser1) await queryRunner.dropForeignKey("chats", fkUser1);
+            const fkUser2 = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("user2_id") !== -1);
+            if (fkUser2) await queryRunner.dropForeignKey("chats", fkUser2);
+            const fkLastMessage = chatsTable.foreignKeys.find(fk => fk.columnNames.indexOf("last_message_id") !== -1);
+            if (fkLastMessage) await queryRunner.dropForeignKey("chats", fkLastMessage);
+        } else {
+             console.warn("Table 'chats' not found, skipping FK drop.");
         }
 
         console.log("Revert migration for User table completed successfully.");
@@ -280,6 +296,37 @@ export class UserMigration1680300000005 implements MigrationInterface {
         if (ENVConfig) {
             setConfig(JSON.parse(ENVConfig));
         }
+    }
+
+    private async addForeignKeyConstraint(queryRunner: QueryRunner): Promise<void> {
+        // Foreign keys for 'chats' table to 'users' table	
+        await queryRunner.createForeignKey(
+            "chats",
+            new TableForeignKey({
+                columnNames: ["user1_id"],
+                referencedColumnNames: ["id"],
+                referencedTableName: "users", // Consider using a config value for the users table name
+                onDelete: "CASCADE",
+            }),
+        );
+        await queryRunner.createForeignKey(
+            "chats",
+            new TableForeignKey({
+                columnNames: ["user2_id"],
+                referencedColumnNames: ["id"],
+                referencedTableName: "users", // Consider using a config value for the users table name
+                onDelete: "CASCADE",
+            }),
+        );
+        await queryRunner.createForeignKey(
+            "chats",
+            new TableForeignKey({
+                columnNames: ["last_message_id"],
+                referencedColumnNames: ["id"],
+                referencedTableName: "chat_messages",
+                onDelete: "SET NULL",
+            }),
+        );
     }
     
 }
