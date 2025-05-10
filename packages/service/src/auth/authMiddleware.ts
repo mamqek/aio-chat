@@ -7,45 +7,35 @@ export interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
+// TODO: make sure that error messages are forwarded to the client in development mode only
+
+let cachedAuthMode: 'direct' | 'auth-endpoint' | 'jwt' | 'custom' | 'proxy';
+
 export async function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    // Skip authentication for login route
-    if (req.path === '/login') {
+    // Skip authentication for login route and public routes
+    if (req.path === '/login' || req.path.startsWith('/public/')) {
         return next();
     }
 
-    // Get authentication mode from config
-    const authMode = getConfigVariable('AUTH_MODE') || 'direct';
+    // Get authentication mode from config (use cached value)
+    if (!cachedAuthMode) {
+        cachedAuthMode = getConfigVariable('AUTH_MODE');
+    }
     
     try {
-        switch(authMode) {
-            case 'auth-endpoint':
-                await handleAuthEndpointAuth(req);
-                break;
-            case 'proxy':
-                await handleProxyAuth(req);
-                break;
-            case 'jwt':
-                await handleJwtAuth(req);
-                break;
-            case 'custom':
-                await handleCustomAuth(req);
-                break;
-            case 'direct':
-            default:
-                await handleDirectAuth(req);
-                break;
-        }
+        // Use cached auth handler functions instead of switch statement
+        await getAuthHandler(cachedAuthMode)(req);
 
         if (!req.user || !req.user.id) {
             console.error('Authentication failed: No user ID found in request', req.user);
             throw new Error('Authentication failed: No user ID');
         }
         
-        // If we got here without error, authentication succeeded
-        // Set up AsyncLocalStorage context with the user
-        asyncLocalStorage.run({ user: req.user }, () => {
-            next();
-        });
+        // Use a more efficient AsyncLocalStorage pattern
+        const store = { user: req.user };
+        asyncLocalStorage.enterWith(store); // Use enterWith if available in your Node version
+        next();
+        
     } catch (error) {
         // Authentication failed
         return res.status(401).json({ 
@@ -53,6 +43,19 @@ export async function authMiddleware(req: AuthenticatedRequest, res: Response, n
             details: process.env.NODE_ENV === 'development' ? error : undefined
         });
     }
+}
+
+// Create a handler lookup for faster execution
+const authHandlers = {
+    'auth-endpoint': handleAuthEndpointAuth,
+    'proxy': handleProxyAuth,
+    'jwt': handleJwtAuth,
+    'custom': handleCustomAuth,
+    'direct': handleDirectAuth
+};
+
+function getAuthHandler(mode: 'direct' | 'auth-endpoint' | 'jwt' | 'custom' | 'proxy') {
+    return authHandlers[mode] || handleDirectAuth;
 }
 
 // PROXY AUTH: Used when requests come through host project's authenticated route
@@ -130,7 +133,7 @@ async function handleJwtAuth(req: AuthenticatedRequest) {
 
     // Map decoded JWT to user
     const userIdField = getConfigVariable('JWT_USER_ID_FIELD');
-    
+
     if (typeof decoded === 'object' && decoded) {
         if (decoded[userIdField]) {
             req.user = { id: decoded[userIdField] };
