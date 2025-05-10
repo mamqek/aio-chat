@@ -2,7 +2,7 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
@@ -15,7 +15,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig( async ({ command }) => ({
     build: {
         lib: {
             entry: 'src/widgets/ChatWidget.js',
@@ -40,7 +40,7 @@ export default defineConfig(({ command }) => ({
     },
     plugins: [
         vue(),
-        vueDevTools(),
+        command !== 'build' && (await import('vite-plugin-vue-devtools')).default(),
         vuetify({ 
             autoImport: true,       // Enabled by default
             styles: { configFile: 'src/assets/vuetify-settings.scss'}
